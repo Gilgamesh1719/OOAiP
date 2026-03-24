@@ -1,4 +1,4 @@
-namespace SpaceBattle.Lib.Tests;
+﻿namespace SpaceBattle.Lib.Tests;
 
 using System.Collections.Concurrent;
 using Hwdtech;
@@ -14,16 +14,15 @@ public class ServerThreadTest_Exeption
 
         new InitHardStopCmd().Execute();
         new InitSoftStopCmd().Execute();
-        
-        
+
         new InitCreateStartRegisterThreadCmd().Execute();
         new InitSendCommandCmd().Execute();
-        var pill=new ActionCommand(()=>
+        var pill = new ActionCommand(() =>
         {
             IoC.Resolve<Hwdtech.ICommand>("Scopes.Current.Set", IoC.Resolve<object>("Scopes.New", IoC.Resolve<object>("Scopes.Root"))).Execute();
             new InitHardStopCmd().Execute();
         });
-        IoC.Resolve<Hwdtech.ICommand>("IoC.Register","pill",(object[] args)=>{return pill;}).Execute();
+        IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "pill", (object[] args) => { return pill; }).Execute();
         var queueCollection = new Dictionary<int, BlockingCollection<Hwdtech.ICommand>>();
         var threadCollection = new Dictionary<int, ServerThread>();
         IoC.Resolve<Hwdtech.ICommand>("IoC.Register", "Server.Commands.RegisterThread", (object[] args) =>
@@ -84,7 +83,7 @@ public class ServerThreadTest_Exeption
     [Fact]
     public void SendCommandTest()
     {
-       
+
         Assert.Empty(IoC.Resolve<Dictionary<int, BlockingCollection<Hwdtech.ICommand>>>("GetQueueCollection"));
 
         var mre = new ManualResetEvent(false);
@@ -144,7 +143,6 @@ public class ServerThreadTest_Exeption
     [Fact]
     public void HardStopWrongThreadDoesNotOccure()
     {
-                
 
         var mre = new ManualResetEvent(false);
         var q1 = new BlockingCollection<Hwdtech.ICommand>(100);
