@@ -1,5 +1,4 @@
-using System.Runtime.Intrinsics;
-using Moq;
+﻿using Moq;
 
 namespace SpaceBattle.Lib.Tests;
 
@@ -10,14 +9,14 @@ public class MoveCommandTest
     {
         var movable = new Mock<IMovable>();
 
-        movable.SetupGet(m => m.Position).Returns(new Vector  (12, 5)).Verifiable();
-        movable.SetupGet(m => m.Velocity).Returns(new Vector  (-5, 3)).Verifiable();
+        movable.SetupGet(m => m.Position).Returns(new Vector(12, 5)).Verifiable();
+        movable.SetupGet(m => m.Velocity).Returns(new Vector(-5, 3)).Verifiable();
 
-        ICommand moveCommand = new MoveCommand(movable.Object);
+        var moveCommand = new MoveCommand(movable.Object);
 
         moveCommand.Execute();
 
-        movable.VerifySet(m => m.Position = new Vector ( 7, 8 ), Times.Once);
+        movable.VerifySet(m => m.Position = new Vector(7, 8), Times.Once);
         movable.VerifyAll();
     }
 
@@ -27,9 +26,9 @@ public class MoveCommandTest
         var movable = new Mock<IMovable>();
 
         movable.SetupGet(m => m.Position).Throws(new Exception()).Verifiable();
-        movable.SetupGet(m => m.Velocity).Returns(new Vector  (-5, 3)).Verifiable();
+        movable.SetupGet(m => m.Velocity).Returns(new Vector(-5, 3)).Verifiable();
 
-        ICommand moveCommand = new MoveCommand(movable.Object);
+        var moveCommand = new MoveCommand(movable.Object);
 
         Assert.Throws<Exception>(moveCommand.Execute);
     }
@@ -39,10 +38,10 @@ public class MoveCommandTest
     {
         var movable = new Mock<IMovable>();
 
-        movable.SetupGet(m => m.Position).Returns(new Vector  (-5, 3)).Verifiable();
+        movable.SetupGet(m => m.Position).Returns(new Vector(-5, 3)).Verifiable();
         movable.SetupGet(m => m.Velocity).Throws(new Exception()).Verifiable();
 
-        ICommand moveCommand = new MoveCommand(movable.Object);
+        var moveCommand = new MoveCommand(movable.Object);
 
         Assert.Throws<Exception>(moveCommand.Execute);
     }
@@ -50,15 +49,14 @@ public class MoveCommandTest
     [Fact]
     public void MoveCommand_Checking_That_Attempt_To_Move_Immovable_Object_Throws_An_Error()
     {
-        var movable=new Mock<IMovable>();
+        var movable = new Mock<IMovable>();
 
-        movable.SetupGet(m => m.Position).Returns(new Vector  (12, 5)).Verifiable();
-        movable.SetupGet(m => m.Velocity).Returns(new Vector  (-5, 3)).Verifiable();
+        movable.SetupGet(m => m.Position).Returns(new Vector(12, 5)).Verifiable();
+        movable.SetupGet(m => m.Velocity).Returns(new Vector(-5, 3)).Verifiable();
 
-        movable.SetupSet(m=> m.Position=It.IsAny<Vector>()).Throws(() => new Exception()).Verifiable();
+        movable.SetupSet(m => m.Position = It.IsAny<Vector>()).Throws(() => new Exception()).Verifiable();
 
-        ICommand moveCommand = new MoveCommand(movable.Object);
-
+        var moveCommand = new MoveCommand(movable.Object);
 
         Assert.Throws<Exception>(moveCommand.Execute);
     }
@@ -66,19 +64,17 @@ public class MoveCommandTest
     [Fact]
     public void MoveCommand_Checking_That_Overrided_GetHashCode_Method_Works_Succesfully()
     {
-        Vector vector= new Vector(0,0);
+        var vector = new Vector(0, 0);
 
-        int c=vector.GetHashCode();
+        vector.GetHashCode();
 
         Assert.True(true);
     }
     [Fact]
-     public void MoveCommand_Checking_That_Attempt_To_Compare_Null_Vector_Does_Not_Throw_An_Error()
+    public void MoveCommand_Checking_That_Attempt_To_Compare_Null_Vector_Does_Not_Throw_An_Error()
     {
-        Vector vector= new Vector();
-        
-        Vector vector1=new Vector(12,5);
-        
-        Assert.False(vector1.Equals(vector));
+        var vector1 = new Vector(12, 5);
+
+        Assert.False(vector1.Equals(null));
     }
 }
